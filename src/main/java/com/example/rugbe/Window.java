@@ -4,19 +4,28 @@ import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
+import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 import static org.lwjgl.glfw.GLFW.GLFW_MAXIMIZED;
 import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
 import static org.lwjgl.glfw.GLFW.GLFW_TRUE;
 import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
 import static org.lwjgl.glfw.GLFW.glfwDefaultWindowHints;
+import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
+import static org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetMouseButtonCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetScrollCallback;
 import static org.lwjgl.glfw.GLFW.glfwShowWindow;
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
+import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.glfw.GLFW.glfwWindowHint;
 import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
@@ -28,7 +37,10 @@ public class Window
 {
     private int width, height;
     private long glfwWindow;
-    private String title;
+    private final String title;
+
+    private float r, g, b, a;
+    private boolean fadeToBlack = false;
 
     private static Window window = null;
 
@@ -36,6 +48,11 @@ public class Window
         this.width = 1920;
         this.height = 1080;
         this.title = "Mario";
+
+        r = 1f;
+        g = 1f;
+        b = 1f;
+        a = 1f;
     }
 
     public static Window get() {
@@ -47,8 +64,17 @@ public class Window
 
     public void run() {
         System.out.println("LWJGL Version: " + Version.getVersion());
+
         init();
         loop();
+
+        //Free Memory
+        glfwFreeCallbacks(glfwWindow);
+        glfwDestroyWindow(glfwWindow);
+
+        //Terminate GLFW and free error callback
+        glfwTerminate();
+        glfwSetErrorCallback(null).free();
     }
 
     public void init() {
@@ -70,6 +96,11 @@ public class Window
         if(glfwWindow == NULL)
             throw new IllegalStateException("Failed to create the GLFW window.");
 
+        glfwSetCursorPosCallback(glfwWindow, MouseListener::mousePosCallBack);
+        glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
+        glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
+        glfwSetKeyCallback(glfwWindow, KeyListener::keyCallBack);
+
         //Make OpenGL Context Current
         glfwMakeContextCurrent(glfwWindow);
         //Enable V-Sync
@@ -88,8 +119,17 @@ public class Window
             //Poll events
             glfwPollEvents();
 
-            glClearColor(1f, 1f, 1f, 1f);
+            glClearColor(r, g, b, a);
             glClear(GL_COLOR_BUFFER_BIT);
+
+            if(fadeToBlack) {
+                r = Math.max(r - 0.01f, 0);
+                g = Math.max(g - 0.01f, 0);
+                b = Math.max(b - 0.01f, 0);
+            }
+
+            if(KeyListener.isKeyPressed(GLFW_KEY_SPACE))
+                fadeToBlack = true;
 
             glfwSwapBuffers(glfwWindow);
         }
