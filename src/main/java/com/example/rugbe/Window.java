@@ -1,12 +1,12 @@
 package com.example.rugbe;
 
+import com.example.util.Time;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 import static org.lwjgl.glfw.GLFW.GLFW_MAXIMIZED;
 import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
 import static org.lwjgl.glfw.GLFW.GLFW_TRUE;
@@ -44,6 +44,8 @@ public class Window
 
     private static Window window = null;
 
+    private static Scene currentScene;
+
     private Window() {
         this.width = 1920;
         this.height = 1080;
@@ -55,11 +57,45 @@ public class Window
         a = 1f;
     }
 
+    public static void changeScene(int newScene) {
+        switch (newScene) {
+            case 0 -> currentScene = new LevelEditorScene();
+            case 1 -> currentScene = new LevelScene();
+            default -> {
+                assert false : "Unknown scene '" + newScene + "'";
+            }
+        }
+    }
+
     public static Window get() {
         if(window == null)
             window = new Window();
 
         return window;
+    }
+
+    public float getR() {
+        return get().r;
+    }
+
+    public float getG() {
+        return get().g;
+    }
+
+    public float getB() {
+        return get().b;
+    }
+
+    public void setR(float r) {
+        get().r = r;
+    }
+
+    public void setG(float g) {
+        get().g = g;
+    }
+
+    public void setB(float b) {
+        get().b = b;
     }
 
     public void run() {
@@ -112,9 +148,15 @@ public class Window
         //Important for LWJGL Interoperation with GLFW's OpenGL Context
         //Enables bindings
         GL.createCapabilities();
+
+        Window.changeScene(0);
     }
 
     public void loop() {
+        float beginTime = Time.getTime();
+        float endTime;
+        float dt = -1f;
+
         while (!glfwWindowShouldClose(glfwWindow)) {
             //Poll events
             glfwPollEvents();
@@ -122,16 +164,14 @@ public class Window
             glClearColor(r, g, b, a);
             glClear(GL_COLOR_BUFFER_BIT);
 
-            if(fadeToBlack) {
-                r = Math.max(r - 0.01f, 0);
-                g = Math.max(g - 0.01f, 0);
-                b = Math.max(b - 0.01f, 0);
-            }
-
-            if(KeyListener.isKeyPressed(GLFW_KEY_SPACE))
-                fadeToBlack = true;
+            if(dt >= 0)
+                currentScene.update(dt);
 
             glfwSwapBuffers(glfwWindow);
+
+            endTime = Time.getTime();
+            dt = endTime - beginTime;
+            beginTime = endTime;
         }
     }
 }
