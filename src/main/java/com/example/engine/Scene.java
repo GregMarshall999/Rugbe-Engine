@@ -1,4 +1,4 @@
-package com.example.rugbe;
+package com.example.engine;
 
 public abstract class Scene
 {

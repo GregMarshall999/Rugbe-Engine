@@ -1,4 +1,4 @@
-package com.example.rugbe;
+package com.example.engine;
 
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;

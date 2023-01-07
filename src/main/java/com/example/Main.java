@@ -1,6 +1,6 @@
 package com.example;
 
-import com.example.rugbe.Window;
+import com.example.engine.Window;
 
 public class Main
 {

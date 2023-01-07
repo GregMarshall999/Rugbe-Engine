@@ -1,4 +1,4 @@
-package com.example.rugbe;
+package com.example.engine;
 
 import com.example.util.Time;
 import org.lwjgl.Version;
