@@ -37,11 +37,11 @@ public class Camera
         return projectionMatrix;
     }
 
-    public void setPositionX(float newX) {
-        position.x = newX;
+    public void adjustPositionTo(Vector2f position) {
+        this.position = position;
     }
 
-    public float getPositionX() {
-        return position.x;
+    public Vector2f getPosition() {
+        return position;
     }
 }

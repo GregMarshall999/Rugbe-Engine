@@ -1,6 +1,7 @@
 package com.example.engine;
 
 import com.example.renderer.Shader;
+import com.example.util.Time;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 
@@ -87,11 +88,13 @@ public class LevelEditorScene extends Scene
 
     @Override
     public void update(float dt) {
-        camera.setPositionX(camera.getPositionX() - dt*50f);
+        Vector2f currentPosition = camera.getPosition();
+        camera.adjustPositionTo(new Vector2f(currentPosition.x - dt*50f, currentPosition.y - dt*20f));
 
         defaultShader.use();
         defaultShader.uploadMat4f("uProjection", camera.getProjectionMatrix());
         defaultShader.uploadMat4f("uView", camera.getViewMatrix());
+        defaultShader.uploadFloat("uTime", Time.getTime());
 
         //bind VAO
         glBindVertexArray(vaoId);
