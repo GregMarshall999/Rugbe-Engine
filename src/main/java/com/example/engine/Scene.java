@@ -2,7 +2,11 @@ package com.example.engine;
 
 public abstract class Scene
 {
-    public Scene() {}
+    Camera camera;
+
+    public Scene() {
+
+    }
 
     public void init() {
 

@@ -1,6 +1,7 @@
 package com.example.engine;
 
 import com.example.renderer.Shader;
+import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
@@ -29,11 +30,11 @@ public class LevelEditorScene extends Scene
     private Shader defaultShader;
 
     private float[] vertexArray = {
-        //position          //color
-        .5f,  -.5f, 0f,     1f, 0f, 0f, 1f, //bottom right
-        -.5f, .5f,  0f,     0f, 1f, 0f, 1f, //top left
-        .5f,  .5f,  0f,     0f, 0f, 1f, 1f, //top right
-        -.5f, -.5f, 0f,     1f, 1f, 0f, 1f  //bottom left
+        //position              //color
+        100.5f, .5f,    0f,     1f, 0f, 0f, 1f, //bottom right
+        .5f,    100.5f, 0f,     0f, 1f, 0f, 1f, //top left
+        100.5f, 100.5f, 0f,     0f, 0f, 1f, 1f, //top right
+        0.5f,   .5f,    0f,     1f, 1f, 0f, 1f  //bottom left
     };
 
     //IMPORTANT Triangle vertex order in counter-clockwise order
@@ -48,6 +49,8 @@ public class LevelEditorScene extends Scene
 
     @Override
     public void init() {
+        camera = new Camera(new Vector2f());
+
         defaultShader = new Shader("assets/shaders/default.glsl");
         defaultShader.compile();
 
@@ -84,7 +87,11 @@ public class LevelEditorScene extends Scene
 
     @Override
     public void update(float dt) {
+        camera.setPositionX(camera.getPositionX() - dt*50f);
+
         defaultShader.use();
+        defaultShader.uploadMat4f("uProjection", camera.getProjectionMatrix());
+        defaultShader.uploadMat4f("uView", camera.getViewMatrix());
 
         //bind VAO
         glBindVertexArray(vaoId);
