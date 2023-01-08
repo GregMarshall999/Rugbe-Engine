@@ -1,6 +1,7 @@
 package com.example.engine;
 
 import com.example.renderer.Shader;
+import com.example.renderer.Texture;
 import com.example.util.Time;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
@@ -12,6 +13,8 @@ import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
 import static org.lwjgl.opengl.GL11.glDrawElements;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
@@ -29,13 +32,14 @@ public class LevelEditorScene extends Scene
     private int vertexId, fragmentId, shaderProgram, vaoId, vboId, eboId;
 
     private Shader defaultShader;
+    private Texture testTexture;
 
     private float[] vertexArray = {
-        //position              //color
-        100.5f, .5f,    0f,     1f, 0f, 0f, 1f, //bottom right
-        .5f,    100.5f, 0f,     0f, 1f, 0f, 1f, //top left
-        100.5f, 100.5f, 0f,     0f, 0f, 1f, 1f, //top right
-        0.5f,   .5f,    0f,     1f, 1f, 0f, 1f  //bottom left
+        //position          //color             //UV Coordinates
+        100f, 0f,   0f,     1f, 0f, 0f, 1f,     1, 1, //bottom right
+        0f,   100f, 0f,     0f, 1f, 0f, 1f,     0, 0, //top left
+        100f, 100f, 0f,     0f, 0f, 1f, 1f,     1, 0, //top right
+        0f,   0f,   0f,     1f, 1f, 0f, 1f,     0, 1  //bottom left
     };
 
     //IMPORTANT Triangle vertex order in counter-clockwise order
@@ -54,6 +58,7 @@ public class LevelEditorScene extends Scene
 
         defaultShader = new Shader("assets/shaders/default.glsl");
         defaultShader.compile();
+        testTexture = new Texture("assets/images/testImage.jpg");
 
 
         //Generate VAO, VBO, EBO and send to GPU
@@ -77,21 +82,30 @@ public class LevelEditorScene extends Scene
 
         int positionSize = 3;
         int colorSize = 4;
-        int floatSizeBytes = 4;
-        int vertexSizeBytes = (positionSize + colorSize)*floatSizeBytes;
+        int uvSize = 2;
+        int vertexSizeBytes = (positionSize + colorSize + uvSize)*Float.BYTES;
         glVertexAttribPointer(0, positionSize, GL_FLOAT, false, vertexSizeBytes, 0);
         glEnableVertexAttribArray(0);
 
-        glVertexAttribPointer(1, colorSize, GL_FLOAT, false, vertexSizeBytes, positionSize*floatSizeBytes);
+        glVertexAttribPointer(1, colorSize, GL_FLOAT, false, vertexSizeBytes, positionSize*Float.BYTES);
         glEnableVertexAttribArray(1);
+
+        glVertexAttribPointer(2, uvSize, GL_FLOAT, false, vertexSizeBytes, (positionSize + colorSize)*Float.BYTES);
+        glEnableVertexAttribArray(2);
     }
 
     @Override
     public void update(float dt) {
-        Vector2f currentPosition = camera.getPosition();
-        camera.adjustPositionTo(new Vector2f(currentPosition.x - dt*50f, currentPosition.y - dt*20f));
+        //Vector2f currentPosition = camera.getPosition();
+        //camera.adjustPositionTo(new Vector2f(currentPosition.x - dt*50f, currentPosition.y - dt*20f));
 
         defaultShader.use();
+
+        //upload texture to shader
+        defaultShader.uploadTexture("TEX_SAMPLER", 0);
+        glActiveTexture(GL_TEXTURE0);
+        testTexture.bind();
+
         defaultShader.uploadMat4f("uProjection", camera.getProjectionMatrix());
         defaultShader.uploadMat4f("uView", camera.getViewMatrix());
         defaultShader.uploadFloat("uTime", Time.getTime());
