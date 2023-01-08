@@ -8,6 +8,10 @@ public abstract class Component
         this.gameObject = gameObject;
     }
 
+    public GameObject getGameObject() {
+        return gameObject;
+    }
+
     public void start() {
 
     }

@@ -82,6 +82,10 @@ public class Window
         return window;
     }
 
+    public static Scene getScene() {
+        return get().currentScene;
+    }
+
     public float getR() {
         return get().r;
     }
