@@ -1,5 +1,7 @@
 package com.example.engine;
 
+import com.example.components.FontRenderer;
+import com.example.components.SpriteRenderer;
 import com.example.renderer.Shader;
 import com.example.renderer.Texture;
 import com.example.util.Time;
@@ -29,10 +31,13 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class LevelEditorScene extends Scene
 {
-    private int vertexId, fragmentId, shaderProgram, vaoId, vboId, eboId;
+    private int vaoId, vboId, eboId;
+    private boolean firstTime = false;
 
     private Shader defaultShader;
     private Texture testTexture;
+
+    private GameObject object;
 
     private float[] vertexArray = {
         //position          //color             //UV Coordinates
@@ -54,11 +59,17 @@ public class LevelEditorScene extends Scene
 
     @Override
     public void init() {
+        System.out.println("Creating 'test object'");
+        object = new GameObject("Test Object");
+        object.addComponent(new SpriteRenderer());
+        object.addComponent(new FontRenderer());
+        addGameObjectToScene(object);
+
         camera = new Camera(new Vector2f());
 
         defaultShader = new Shader("assets/shaders/default.glsl");
         defaultShader.compile();
-        testTexture = new Texture("assets/images/testImage.jpg");
+        testTexture = new Texture("assets/images/testImage.png");
 
 
         //Generate VAO, VBO, EBO and send to GPU
@@ -125,5 +136,15 @@ public class LevelEditorScene extends Scene
         glBindVertexArray(0);
 
         defaultShader.detach();
+
+        if(!firstTime) {
+            System.out.println("Creating game object");
+            GameObject go = new GameObject("Test Object 2");
+            go.addComponent(new SpriteRenderer());
+            addGameObjectToScene(go);
+            firstTime = true;
+        }
+
+        gameObjects.forEach(gameObject -> gameObject.update(dt));
     }
 }
