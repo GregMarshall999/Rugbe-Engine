@@ -1,6 +1,7 @@
 package com.example.engine;
 
 import com.example.components.SpriteRenderer;
+import com.example.util.AssetPool;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
@@ -32,6 +33,8 @@ public class LevelEditorScene extends Scene
                 addGameObjectToScene(go);
             }
         }
+
+        loadResources();
     }
 
     @Override
@@ -40,5 +43,9 @@ public class LevelEditorScene extends Scene
 
         gameObjects.forEach(gameObject -> gameObject.update(dt));
         renderer.render();
+    }
+
+    private void loadResources() {
+        AssetPool.getShader("assets/shaders/default.glsl");
     }
 }

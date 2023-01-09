@@ -2,6 +2,7 @@ package com.example.renderer;
 
 import com.example.components.SpriteRenderer;
 import com.example.engine.Window;
+import com.example.util.AssetPool;
 import org.joml.Vector4f;
 
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
@@ -47,7 +48,8 @@ public class RenderBatch
 
     public RenderBatch(int maxBatchSize) {
         this.maxBatchSize = maxBatchSize;
-        shader = new Shader("assets/shaders/default.glsl");
+
+        shader = AssetPool.getShader("assets/shaders/default.glsl");
         shader.compile();
         sprites = new SpriteRenderer[maxBatchSize];
 
