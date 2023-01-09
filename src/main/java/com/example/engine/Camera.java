@@ -16,18 +16,23 @@ public class Camera
         adjustProjection();
     }
 
+    public void translate(Vector2f direction) {
+        position.x += direction.x;
+        position.y += direction.y;
+    }
+
     public void adjustProjection() {
         projectionMatrix.identity();
-        projectionMatrix.ortho(.0f, 32f*40f, .0f, 32f*21f, .0f, 100f);
+        projectionMatrix.ortho(0f, 32f*40f, 0f, 32f*21f, 0f, 100f);
     }
 
     public Matrix4f getViewMatrix() {
-        Vector3f cameraFront = new Vector3f(.0f, .0f, -1f);
-        Vector3f cameraUp = new Vector3f(.0f, 1f, .0f);
+        Vector3f cameraFront = new Vector3f(0f, 0f, -1f);
+        Vector3f cameraUp = new Vector3f(0f, 1f, 0f);
         viewMatrix.identity();
         viewMatrix = viewMatrix.lookAt(
                 new Vector3f(position.x, position.y, 20f),
-                cameraFront.add(position.x, position.y, .0f),
+                cameraFront.add(position.x, position.y, 0f),
                 cameraUp);
 
         return viewMatrix;
@@ -35,13 +40,5 @@ public class Camera
 
     public Matrix4f getProjectionMatrix() {
         return projectionMatrix;
-    }
-
-    public void adjustPositionTo(Vector2f position) {
-        this.position = position;
-    }
-
-    public Vector2f getPosition() {
-        return position;
     }
 }
