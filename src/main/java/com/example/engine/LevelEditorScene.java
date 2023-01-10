@@ -5,13 +5,15 @@ import com.example.components.SpriteSheet;
 import com.example.util.AssetPool;
 import org.joml.Vector2f;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
-
 public class LevelEditorScene extends Scene
 {
+    private int spriteIndex = 0;
+    private float spriteFlipTime = .2f;
+    private float spriteFlipTimeLeft = 0f;
+
+    private GameObject obj;
+    private SpriteSheet sprites;
+
     public LevelEditorScene() {
 
     }
@@ -22,11 +24,11 @@ public class LevelEditorScene extends Scene
 
         camera = new Camera(new Vector2f(-250, 0));
 
-        SpriteSheet sprites = AssetPool.getSpriteSheet("assets/images/spritesheet.png");
+        sprites = AssetPool.getSpriteSheet("assets/images/spritesheet.png");
 
-        GameObject obj1 = new GameObject("Object 1", new Transform(new Vector2f(100, 100), new Vector2f(256, 256)));
-        obj1.addComponent(new SpriteRenderer(sprites.getSprites(0)));
-        addGameObjectToScene(obj1);
+        obj = new GameObject("Object 1", new Transform(new Vector2f(100, 100), new Vector2f(256, 256)));
+        obj.addComponent(new SpriteRenderer(sprites.getSprites(0)));
+        addGameObjectToScene(obj);
 
         GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(400, 100), new Vector2f(256, 256)));
         obj2.addComponent(new SpriteRenderer(sprites.getSprites(15)));
@@ -35,15 +37,15 @@ public class LevelEditorScene extends Scene
 
     @Override
     public void update(float dt) {
-        if (KeyListener.isKeyPressed(GLFW_KEY_RIGHT))
-            camera.translate(new Vector2f(100f*dt, 0f));
-        else if (KeyListener.isKeyPressed(GLFW_KEY_LEFT))
-            camera.translate(new Vector2f(-100f*dt, 0f));
+        spriteFlipTimeLeft -= dt;
+        if(spriteFlipTimeLeft <=0) {
+            spriteFlipTimeLeft = spriteFlipTime;
+            spriteIndex++;
+            if(spriteIndex > 4)
+                spriteIndex = 0;
 
-        if (KeyListener.isKeyPressed(GLFW_KEY_UP))
-            camera.translate(new Vector2f(0f, 100f*dt));
-        else if (KeyListener.isKeyPressed(GLFW_KEY_DOWN))
-            camera.translate(new Vector2f(0f, -100f*dt));
+            obj.getComponents(SpriteRenderer.class).setSprite(sprites.getSprites(spriteIndex));
+        }
 
         gameObjects.forEach(gameObject -> gameObject.update(dt));
         renderer.render();

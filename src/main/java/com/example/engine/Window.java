@@ -51,9 +51,9 @@ public class Window
         this.height = 1080;
         this.title = "Mario";
 
-        r = 1f;
-        g = 1f;
-        b = 1f;
+        r = 0f;
+        g = 0f;
+        b = 0f;
         a = 1f;
     }
 
