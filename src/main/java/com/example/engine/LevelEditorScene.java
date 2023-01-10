@@ -1,6 +1,5 @@
 package com.example.engine;
 
-import com.example.components.Sprite;
 import com.example.components.SpriteRenderer;
 import com.example.components.SpriteSheet;
 import com.example.util.AssetPool;
