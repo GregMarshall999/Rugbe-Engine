@@ -1,5 +1,6 @@
 package com.example.util;
 
+import com.example.components.SpriteSheet;
 import com.example.renderer.Shader;
 import com.example.renderer.Texture;
 
@@ -11,6 +12,7 @@ public class AssetPool
 {
     private static Map<String, Shader> shaders = new HashMap<>();
     private static Map<String, Texture> textures = new HashMap<>();
+    private static Map<String, SpriteSheet> spriteSheets = new HashMap<>();
 
     public static Shader getShader(String resourceName) {
         File file = new File(resourceName);
@@ -35,5 +37,19 @@ public class AssetPool
             textures.put(file.getAbsolutePath(), texture);
             return texture;
         }
+    }
+
+    public static void addSpriteSheet(String resourceName, SpriteSheet spriteSheet) {
+        File file = new File(resourceName);
+        if(!spriteSheets.containsKey(file.getAbsolutePath()))
+            spriteSheets.put(file.getAbsolutePath(), spriteSheet);
+    }
+
+    public static SpriteSheet getSpriteSheet(String resourceName) {
+        File file = new File(resourceName);
+        if(!spriteSheets.containsKey(file.getAbsolutePath()))
+            assert false: "Error: Tried to access sprite sheet '" + resourceName + "', innexistant in asset pool.";
+
+        return spriteSheets.getOrDefault(file.getAbsolutePath(), null);
     }
 }

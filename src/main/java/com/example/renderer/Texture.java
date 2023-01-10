@@ -27,6 +27,7 @@ public class Texture
 {
     private String filePath;
     private int texId;
+    public int width, height;
 
     public Texture(String filePath) {
         this.filePath = filePath;
@@ -49,7 +50,10 @@ public class Texture
         stbi_set_flip_vertically_on_load(true);
         ByteBuffer image = stbi_load(filePath, width, height, channels, 0);
 
-        if(image != null)
+        if(image != null) {
+            this.width = width.get(0);
+            this.height = height.get(0);
+
             switch (channels.get(0)) {
                 case 3 -> glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0), 0, GL_RGB, GL_UNSIGNED_BYTE, image);
                 case 4 -> glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width.get(0), height.get(0), 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
@@ -57,6 +61,7 @@ public class Texture
                     assert false : "Error: (Texture) Unknown number of channels '" + channels.get(0) + "'";
                 }
             }
+        }
         else
             assert false : "Error: (Texture) Could not load image '" + filePath + "'";
 
@@ -69,5 +74,13 @@ public class Texture
 
     public void unbind() {
         glBindTexture(GL_TEXTURE_2D, 0);
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 }
