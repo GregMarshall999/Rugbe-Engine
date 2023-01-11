@@ -22,6 +22,7 @@ import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetMouseButtonCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetScrollCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeCallback;
 import static org.lwjgl.glfw.GLFW.glfwShowWindow;
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
@@ -43,6 +44,7 @@ public class Window
     private int width, height;
     private long glfwWindow;
     private final String title;
+    private ImGuiLayer imGuiLayer;
 
     private float r, g, b, a;
     private boolean fadeToBlack = false;
@@ -89,6 +91,22 @@ public class Window
 
     public static Scene getScene() {
         return get().currentScene;
+    }
+
+    public static int getWidth() {
+        return get().width;
+    }
+
+    public static int getHeight() {
+        return get().height;
+    }
+
+    public static void setWidth(int newWidth) {
+        get().width = newWidth;
+    }
+
+    public static void setHeight(int newHeight) {
+        get().height = newHeight;
     }
 
     public float getR() {
@@ -153,6 +171,10 @@ public class Window
         glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
         glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
         glfwSetKeyCallback(glfwWindow, KeyListener::keyCallBack);
+        glfwSetWindowSizeCallback(glfwWindow, (w, newWidth, newHeight) -> {
+            Window.setWidth(newWidth);
+            Window.setHeight(newHeight);
+        });
 
         //Make OpenGL Context Current
         glfwMakeContextCurrent(glfwWindow);
@@ -168,6 +190,9 @@ public class Window
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
+        imGuiLayer = new ImGuiLayer(glfwWindow);
+        imGuiLayer.initImGui();
 
         Window.changeScene(0);
     }
@@ -186,6 +211,8 @@ public class Window
 
             if(dt >= 0)
                 currentScene.update(dt);
+
+            imGuiLayer.update(dt);
 
             glfwSwapBuffers(glfwWindow);
 
