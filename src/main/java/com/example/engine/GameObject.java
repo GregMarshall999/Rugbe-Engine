@@ -67,4 +67,9 @@ public class GameObject
     public void start() {
         components.forEach(Component::start);
     }
+
+    public void imGui() {
+        for(Component c : components)
+            c.imGui();
+    }
 }

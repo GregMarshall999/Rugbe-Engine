@@ -212,7 +212,7 @@ public class Window
             if(dt >= 0)
                 currentScene.update(dt);
 
-            imGuiLayer.update(dt);
+            imGuiLayer.update(dt, currentScene);
 
             glfwSwapBuffers(glfwWindow);
 
