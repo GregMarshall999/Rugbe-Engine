@@ -8,13 +8,11 @@ import java.util.List;
 
 public class SpriteSheet
 {
-    private Texture texture;
-    private List<Sprite> sprites;
+    private final List<Sprite> sprites;
 
     public SpriteSheet(Texture texture, int spriteWidth, int spriteHeight, int numSprites, int spacing) {
         sprites = new ArrayList<>();
 
-        this.texture = texture;
         int currentX = 0;
         int currentY = texture.getHeight() - spriteHeight;
         for(int i = 0; i < numSprites; i++) {
@@ -29,7 +27,9 @@ public class SpriteSheet
                     new Vector2f(leftX, bottomY),
                     new Vector2f(leftX, topY),
             };
-            Sprite sprite = new Sprite(this.texture, texCoords);
+            Sprite sprite = new Sprite();
+            sprite.setTexCoords(texCoords);
+            sprite.setTexture(texture);
             this.sprites.add(sprite);
 
             currentX += spriteWidth + spacing;

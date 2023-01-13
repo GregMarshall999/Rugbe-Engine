@@ -10,9 +10,9 @@ import java.util.Map;
 
 public class AssetPool
 {
-    private static Map<String, Shader> shaders = new HashMap<>();
-    private static Map<String, Texture> textures = new HashMap<>();
-    private static Map<String, SpriteSheet> spriteSheets = new HashMap<>();
+    private final static Map<String, Shader> shaders = new HashMap<>();
+    private final static Map<String, SpriteSheet> spriteSheets = new HashMap<>();
+    private final static Map<String, Texture> textures = new HashMap<>();
 
     public static Shader getShader(String resourceName) {
         File file = new File(resourceName);
@@ -27,13 +27,21 @@ public class AssetPool
         }
     }
 
+    public static SpriteSheet getSpriteSheet(String resourceName) {
+        File file = new File(resourceName);
+        assert spriteSheets.containsKey(file.getAbsolutePath()) : "Error: Tried to access sprite sheet '" + resourceName + "', nonexistent in asset pool.";
+
+        return spriteSheets.getOrDefault(file.getAbsolutePath(), null);
+    }
+
     public static Texture getTexture(String resourceName) {
         File file = new File(resourceName);
 
         if(textures.containsKey(file.getAbsolutePath()))
             return textures.get(file.getAbsolutePath());
         else {
-            Texture texture = new Texture(resourceName);
+            Texture texture = new Texture();
+            texture.init(resourceName);
             textures.put(file.getAbsolutePath(), texture);
             return texture;
         }
@@ -43,13 +51,5 @@ public class AssetPool
         File file = new File(resourceName);
         if(!spriteSheets.containsKey(file.getAbsolutePath()))
             spriteSheets.put(file.getAbsolutePath(), spriteSheet);
-    }
-
-    public static SpriteSheet getSpriteSheet(String resourceName) {
-        File file = new File(resourceName);
-        if(!spriteSheets.containsKey(file.getAbsolutePath()))
-            assert false: "Error: Tried to access sprite sheet '" + resourceName + "', innexistant in asset pool.";
-
-        return spriteSheets.getOrDefault(file.getAbsolutePath(), null);
     }
 }

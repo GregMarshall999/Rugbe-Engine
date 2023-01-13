@@ -9,22 +9,31 @@ import org.joml.Vector4f;
 
 public class SpriteRenderer extends Component
 {
-    private Vector4f color;
-    private Sprite sprite;
+    private Sprite sprite = new Sprite();
+    private Vector4f color =  new Vector4f(1, 1, 1, 1);
 
-    private Transform lastTransform;
-    private boolean isDirty;
+    private transient boolean isDirty = false;
+    private transient Transform lastTransform;
 
-    public SpriteRenderer(Vector4f color) {
-        this.color = color;
-        sprite = new Sprite(null);
+    /*public SpriteRenderer(Sprite sprite) {
+        this.sprite = sprite;
+        COLOR = new Vector4f(1, 1, 1, 1);
         isDirty = true;
     }
 
-    public SpriteRenderer(Sprite sprite) {
-        this.sprite = sprite;
-        color = new Vector4f(1, 1, 1, 1);
+    public SpriteRenderer(Vector4f color) {
+        this.COLOR = color;
+        sprite = new Sprite(null);
         isDirty = true;
+    }*/
+
+    @Override
+    public void imGui() {
+        float[] imColor = {color.x, color.y, color.z, color.w};
+        if (ImGui.colorPicker4("Color Picker: ", imColor)) {
+            color.set(imColor[0], imColor[1], imColor[2], imColor[3]);
+            isDirty = true;
+        }
     }
 
     @Override
@@ -40,17 +49,8 @@ public class SpriteRenderer extends Component
         }
     }
 
-    @Override
-    public void imGui() {
-        float[] imColor = {color.x, color.y, color.z, color.w};
-        if (ImGui.colorPicker4("Color Picker: ", imColor)) {
-            color.set(imColor[0], imColor[1], imColor[2], imColor[3]);
-            isDirty = true;
-        }
-    }
-
-    public Vector4f getColor() {
-        return color;
+    public boolean isDirty() {
+        return isDirty;
     }
 
     public Texture getTexture() {
@@ -61,9 +61,12 @@ public class SpriteRenderer extends Component
         return sprite.getTexCoords();
     }
 
-    public void setSprite(Sprite sprite) {
-        this.sprite = sprite;
-        isDirty = true;
+    public Vector4f getColor() {
+        return color;
+    }
+
+    public void setClean() {
+        isDirty = false;
     }
 
     public void setColor(Vector4f color) {
@@ -73,11 +76,8 @@ public class SpriteRenderer extends Component
         }
     }
 
-    public boolean isDirty() {
-        return isDirty;
-    }
-
-    public void setClean() {
-        isDirty = false;
+    public void setSprite(Sprite sprite) {
+        this.sprite = sprite;
+        isDirty = true;
     }
 }
