@@ -83,7 +83,7 @@ public class RenderBatch implements Comparable<RenderBatch>
         //Allocate space for vertices
         vboId = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vboId);
-        glBufferData(GL_ARRAY_BUFFER, (long)vertices.length*Float.BYTES, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, (long)vertices.length *Float.BYTES, GL_DYNAMIC_DRAW);
 
         int eboId = glGenBuffers();
         int[] indices = generateIndices();
@@ -154,7 +154,9 @@ public class RenderBatch implements Comparable<RenderBatch>
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
         glBindVertexArray(0);
-        textures.forEach(Texture::unbind);
+
+        for(Texture texture : textures)
+            texture.unbind();
         shader.detach();
     }
 
@@ -176,7 +178,7 @@ public class RenderBatch implements Comparable<RenderBatch>
         elements[offsetArrayIndex + 1] = offset + 2;
         elements[offsetArrayIndex + 2] = offset;
 
-        elements[offsetArrayIndex + 3] = offset + 0;
+        elements[offsetArrayIndex + 3] = offset;
         elements[offsetArrayIndex + 4] = offset + 2;
         elements[offsetArrayIndex + 5] = offset + 1;
     }

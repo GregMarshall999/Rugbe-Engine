@@ -12,20 +12,8 @@ public class SpriteRenderer extends Component
     private Sprite sprite = new Sprite();
     private Vector4f color =  new Vector4f(1, 1, 1, 1);
 
-    private transient boolean isDirty = false;
+    private transient boolean isDirty = true;
     private transient Transform lastTransform;
-
-    /*public SpriteRenderer(Sprite sprite) {
-        this.sprite = sprite;
-        COLOR = new Vector4f(1, 1, 1, 1);
-        isDirty = true;
-    }
-
-    public SpriteRenderer(Vector4f color) {
-        this.COLOR = color;
-        sprite = new Sprite(null);
-        isDirty = true;
-    }*/
 
     @Override
     public void imGui() {

@@ -48,7 +48,7 @@ public class Shader
     private String vertexSource, fragmentSource;
 
     public Shader(String filePath) {
-        this.FILE_PATH = filePath;
+        FILE_PATH = filePath;
 
         try {
             String source = new String(Files.readAllBytes(Paths.get(filePath)));
@@ -131,8 +131,8 @@ public class Shader
     }
 
     public void detach() {
-        glUseProgram(0);
         beingUsed = false;
+        glUseProgram(0);
     }
 
     public void uploadFloat(String varName, float val) {
