@@ -1,9 +1,15 @@
-package com.example.engine;
+package com.example.scenes;
 
+import com.example.components.MouseControls;
 import com.example.components.RigidBody;
 import com.example.components.Sprite;
 import com.example.components.SpriteRenderer;
 import com.example.components.SpriteSheet;
+import com.example.engine.Camera;
+import com.example.engine.GameObject;
+import com.example.engine.MouseListener;
+import com.example.engine.Prefabs;
+import com.example.engine.Transform;
 import com.example.util.AssetPool;
 import imgui.ImGui;
 import imgui.ImVec2;
@@ -15,6 +21,8 @@ public class LevelEditorScene extends Scene
     private GameObject obj;
     private SpriteSheet sprites;
     SpriteRenderer objSprite;
+
+    MouseControls mouseControls = new MouseControls();
 
     public LevelEditorScene() {
 
@@ -49,6 +57,7 @@ public class LevelEditorScene extends Scene
 
     @Override
     public void update(float dt) {
+        mouseControls.update(dt);
         MouseListener.getOrthoX();
 
         for(GameObject gameObject : gameObjects)
@@ -77,7 +86,8 @@ public class LevelEditorScene extends Scene
 
             ImGui.pushID(i);
             if(ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[0].x, texCoords[0].y, texCoords[2].x, texCoords[2].y)) {
-                System.out.println("Button " + i + "clicked");
+                GameObject object = Prefabs.generateSpriteObject(sprite, sprite.getWidth(), sprite.getHeight());
+                mouseControls.pickupObject(object);
             }
             ImGui.popID();
 

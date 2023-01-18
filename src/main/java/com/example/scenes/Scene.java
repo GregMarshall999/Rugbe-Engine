@@ -1,5 +1,10 @@
-package com.example.engine;
+package com.example.scenes;
 
+import com.example.components.Component;
+import com.example.components.ComponentDeserializer;
+import com.example.engine.Camera;
+import com.example.engine.GameObject;
+import com.example.engine.GameObjectDeserializer;
 import com.example.renderer.Renderer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -98,9 +103,25 @@ public abstract class Scene
         }
 
         if(!inFile.equals("")) {
+            int maxGoId = -1;
+            int maxCompId = -1;
             GameObject[] objs = gson.fromJson(inFile, GameObject[].class);
-            for(GameObject obj : objs)
+            for(GameObject obj : objs) {
                 addGameObjectToScene(obj);
+
+                for(Component c : obj.getAllComponents()) {
+                    if(c.getUid() > maxCompId) {
+                        maxCompId = c.getUid();
+                    }
+                }
+                if(obj.getUid() > maxGoId) {
+                    maxGoId = obj.getUid();
+                }
+            }
+            maxCompId++;
+            maxGoId++;
+            GameObject.init(maxGoId);
+            Component.init(maxCompId);
             levelLoaded = true;
         }
     }

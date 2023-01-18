@@ -1,7 +1,5 @@
 package com.example.components;
 
-import com.example.engine.Component;
-
 public class FontRenderer extends Component
 {
     @Override

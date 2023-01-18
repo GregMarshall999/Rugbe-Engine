@@ -1,4 +1,7 @@
-package com.example.engine;
+package com.example.scenes;
+
+import com.example.engine.Window;
+import com.example.scenes.Scene;
 
 public class LevelScene extends Scene
 {

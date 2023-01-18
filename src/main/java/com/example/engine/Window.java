@@ -1,5 +1,8 @@
 package com.example.engine;
 
+import com.example.scenes.LevelEditorScene;
+import com.example.scenes.LevelScene;
+import com.example.scenes.Scene;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -216,5 +219,7 @@ public class Window
             dt = endTime - beginTime;
             beginTime = endTime;
         }
+
+        currentScene.saveExit();
     }
 }

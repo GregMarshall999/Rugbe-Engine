@@ -1,6 +1,5 @@
 package com.example.components;
 
-import com.example.engine.Component;
 import com.example.engine.Transform;
 import com.example.renderer.Texture;
 import imgui.ImGui;

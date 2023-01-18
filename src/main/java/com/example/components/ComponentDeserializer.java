@@ -1,5 +1,6 @@
-package com.example.engine;
+package com.example.components;
 
+import com.example.components.Component;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;

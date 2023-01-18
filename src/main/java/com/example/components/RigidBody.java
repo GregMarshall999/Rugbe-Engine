@@ -1,6 +1,5 @@
 package com.example.components;
 
-import com.example.engine.Component;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 

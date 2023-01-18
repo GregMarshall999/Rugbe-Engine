@@ -1,5 +1,6 @@
-package com.example.engine;
+package com.example.components;
 
+import com.example.engine.GameObject;
 import imgui.ImGui;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -10,6 +11,9 @@ import java.lang.reflect.Modifier;
 public abstract class Component
 {
     protected transient GameObject gameObject;
+
+    private static int ID_COUNTER = 0;
+    private int uid = -1;
 
     public void setGameObject(GameObject gameObject) {
         this.gameObject = gameObject;
@@ -79,5 +83,19 @@ public abstract class Component
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
+
+    public void generateId() {
+        if (uid == -1) {
+            uid = ID_COUNTER++;
+        }
+    }
+
+    public int getUid() {
+        return uid;
+    }
+
+    public static void init(int maxId) {
+        ID_COUNTER = maxId;
     }
 }
