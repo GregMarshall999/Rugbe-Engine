@@ -1,5 +1,6 @@
 package com.example.engine;
 
+import com.example.renderer.DebugDraw;
 import com.example.scenes.LevelEditorScene;
 import com.example.scenes.LevelScene;
 import com.example.scenes.Scene;
@@ -205,11 +206,15 @@ public class Window
             //Poll events
             glfwPollEvents();
 
+            DebugDraw.beginFrame();
+
             glClearColor(r, g, b, a);
             glClear(GL_COLOR_BUFFER_BIT);
 
-            if(dt >= 0)
+            if(dt >= 0) {
+                DebugDraw.draw();
                 currentScene.update(dt);
+            }
 
             imGuiLayer.update(dt, currentScene);
 
