@@ -1,6 +1,7 @@
 package com.example.engine;
 
 import com.example.renderer.DebugDraw;
+import com.example.renderer.Framebuffer;
 import com.example.scenes.LevelEditorScene;
 import com.example.scenes.LevelScene;
 import com.example.scenes.Scene;
@@ -48,6 +49,7 @@ public class Window {
     private String title;
     private long glfwWindow;
     private ImGuiLayer imguiLayer;
+    private Framebuffer framebuffer;
 
     public float r, g, b, a;
     private boolean fadeToBlack = false;
@@ -161,6 +163,8 @@ public class Window {
         this.imguiLayer = new ImGuiLayer(glfwWindow);
         this.imguiLayer.initImGui();
 
+        framebuffer = new Framebuffer(3840, 2160);
+
         Window.changeScene(0);
     }
 
@@ -178,10 +182,12 @@ public class Window {
             glClearColor(r, g, b, a);
             glClear(GL_COLOR_BUFFER_BIT);
 
+            framebuffer.bind();
             if (dt >= 0) {
                 DebugDraw.draw();
                 currentScene.update(dt);
             }
+            framebuffer.unBind();
 
             this.imguiLayer.update(dt, currentScene);
             glfwSwapBuffers(glfwWindow);
