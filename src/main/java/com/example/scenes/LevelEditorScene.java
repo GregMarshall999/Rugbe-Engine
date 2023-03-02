@@ -9,10 +9,12 @@ import com.example.engine.Camera;
 import com.example.engine.GameObject;
 import com.example.engine.Prefabs;
 import com.example.engine.Transform;
+import com.example.renderer.DebugDraw;
 import com.example.util.AssetPool;
 import imgui.ImGui;
 import imgui.ImVec2;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 public class LevelEditorScene extends Scene {
 
