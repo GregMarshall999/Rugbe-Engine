@@ -10,8 +10,7 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
-public class GameObjectDeserializer implements JsonDeserializer<GameObject>
-{
+public class GameObjectDeserializer implements JsonDeserializer<GameObject> {
     @Override
     public GameObject deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
@@ -20,11 +19,11 @@ public class GameObjectDeserializer implements JsonDeserializer<GameObject>
         Transform transform = context.deserialize(jsonObject.get("transform"), Transform.class);
         int zIndex = context.deserialize(jsonObject.get("zIndex"), int.class);
 
-        GameObject gameObject = new GameObject(name, transform, zIndex);
-        for(JsonElement e : components) {
+        GameObject go = new GameObject(name, transform, zIndex);
+        for (JsonElement e : components) {
             Component c = context.deserialize(e, Component.class);
-            gameObject.addComponent(c);
+            go.addComponent(c);
         }
-        return gameObject;
+        return go;
     }
 }

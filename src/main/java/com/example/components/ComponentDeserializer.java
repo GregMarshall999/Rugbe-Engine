@@ -1,6 +1,5 @@
 package com.example.components;
 
-import com.example.components.Component;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -12,8 +11,9 @@ import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
 
-public class ComponentDeserializer implements JsonSerializer<Component>, JsonDeserializer<Component>
-{
+public class ComponentDeserializer implements JsonSerializer<Component>,
+        JsonDeserializer<Component> {
+
     @Override
     public Component deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();

@@ -8,20 +8,11 @@ import org.joml.Vector4f;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
-public abstract class Component
-{
-    protected transient GameObject gameObject;
-
+public abstract class Component {
     private static int ID_COUNTER = 0;
     private int uid = -1;
 
-    public void setGameObject(GameObject gameObject) {
-        this.gameObject = gameObject;
-    }
-
-    public GameObject getGameObject() {
-        return gameObject;
-    }
+    public transient GameObject gameObject = null;
 
     public void start() {
 
@@ -31,27 +22,30 @@ public abstract class Component
 
     }
 
-    public void imGui() {
+    public void imgui() {
         try {
-            Field[] fields = getClass().getDeclaredFields();
-            for(Field field : fields) {
+            Field[] fields = this.getClass().getDeclaredFields();
+            for (Field field : fields) {
                 boolean isTransient = Modifier.isTransient(field.getModifiers());
-                if(isTransient)
+                if (isTransient) {
                     continue;
+                }
 
                 boolean isPrivate = Modifier.isPrivate(field.getModifiers());
-                if(isPrivate)
+                if (isPrivate) {
                     field.setAccessible(true);
+                }
 
-                Class<?> type = field.getType();
+                Class type = field.getType();
                 Object value = field.get(this);
                 String name = field.getName();
 
-                if(type == int.class) {
+                if (type == int.class) {
                     int val = (int)value;
                     int[] imInt = {val};
-                    if(ImGui.dragInt(name + ": ", imInt))
+                    if (ImGui.dragInt(name + ": ", imInt)) {
                         field.set(this, imInt[0]);
+                    }
                 } else if (type == float.class) {
                     float val = (float)value;
                     float[] imFloat = {val};
@@ -77,8 +71,10 @@ public abstract class Component
                     }
                 }
 
-                if(isPrivate)
+
+                if (isPrivate) {
                     field.setAccessible(false);
+                }
             }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
@@ -86,13 +82,13 @@ public abstract class Component
     }
 
     public void generateId() {
-        if (uid == -1) {
-            uid = ID_COUNTER++;
+        if (this.uid == -1) {
+            this.uid = ID_COUNTER++;
         }
     }
 
     public int getUid() {
-        return uid;
+        return this.uid;
     }
 
     public static void init(int maxId) {

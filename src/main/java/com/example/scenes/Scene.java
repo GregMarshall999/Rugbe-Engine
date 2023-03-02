@@ -19,13 +19,12 @@ import java.util.List;
 
 public abstract class Scene
 {
-    protected Camera camera;
     protected Renderer renderer = new Renderer();
-    protected List<GameObject> gameObjects = new ArrayList<>();
-    protected GameObject activeGameObject;
-    protected boolean levelLoaded = false;
-
+    protected Camera camera;
     private boolean isRunning = false;
+    protected List<GameObject> gameObjects = new ArrayList<>();
+    protected GameObject activeGameObject = null;
+    protected boolean levelLoaded = false;
 
     public Scene() {
 
@@ -36,39 +35,40 @@ public abstract class Scene
     }
 
     public void start() {
-        for(GameObject gameObject : gameObjects) {
-            gameObject.start();
-            renderer.add(gameObject);
+        for (GameObject go : gameObjects) {
+            go.start();
+            this.renderer.add(go);
         }
         isRunning = true;
     }
 
-    public void addGameObjectToScene(GameObject gameObject) {
-        gameObjects.add(gameObject);
-
-        if(isRunning) {
-            gameObject.start();
-            renderer.add(gameObject);
+    public void addGameObjectToScene(GameObject go) {
+        if (!isRunning) {
+            gameObjects.add(go);
+        } else {
+            gameObjects.add(go);
+            go.start();
+            this.renderer.add(go);
         }
     }
 
     public abstract void update(float dt);
 
     public Camera camera() {
-        return camera;
+        return this.camera;
     }
 
-    public void sceneImGui() {
-        if(activeGameObject != null) {
+    public void sceneImgui() {
+        if (activeGameObject != null) {
             ImGui.begin("Inspector");
-            activeGameObject.imGui();
+            activeGameObject.imgui();
             ImGui.end();
         }
 
-        imGui();
+        imgui();
     }
 
-    public void imGui() {
+    public void imgui() {
 
     }
 
@@ -81,9 +81,9 @@ public abstract class Scene
 
         try {
             FileWriter writer = new FileWriter("level.txt");
-            writer.write(gson.toJson(gameObjects));
+            writer.write(gson.toJson(this.gameObjects));
             writer.close();
-        } catch (IOException e) {
+        } catch(IOException e) {
             e.printStackTrace();
         }
     }
@@ -102,27 +102,28 @@ public abstract class Scene
             e.printStackTrace();
         }
 
-        if(!inFile.equals("")) {
+        if (!inFile.equals("")) {
             int maxGoId = -1;
             int maxCompId = -1;
             GameObject[] objs = gson.fromJson(inFile, GameObject[].class);
-            for(GameObject obj : objs) {
-                addGameObjectToScene(obj);
+            for (int i=0; i < objs.length; i++) {
+                addGameObjectToScene(objs[i]);
 
-                for(Component c : obj.getAllComponents()) {
-                    if(c.getUid() > maxCompId) {
+                for (Component c : objs[i].getAllComponents()) {
+                    if (c.getUid() > maxCompId) {
                         maxCompId = c.getUid();
                     }
                 }
-                if(obj.getUid() > maxGoId) {
-                    maxGoId = obj.getUid();
+                if (objs[i].getUid() > maxGoId) {
+                    maxGoId = objs[i].getUid();
                 }
             }
-            maxCompId++;
+
             maxGoId++;
+            maxCompId++;
             GameObject.init(maxGoId);
             Component.init(maxCompId);
-            levelLoaded = true;
+            this.levelLoaded = true;
         }
     }
 }

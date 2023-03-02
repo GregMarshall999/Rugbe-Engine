@@ -1,6 +1,6 @@
 package com.example.util;
 
-import com.example.components.SpriteSheet;
+import com.example.components.Spritesheet;
 import com.example.renderer.Shader;
 import com.example.renderer.Texture;
 
@@ -10,46 +10,46 @@ import java.util.Map;
 
 public class AssetPool
 {
-    private final static Map<String, Shader> shaders = new HashMap<>();
-    private final static Map<String, SpriteSheet> spriteSheets = new HashMap<>();
-    private final static Map<String, Texture> textures = new HashMap<>();
+    private static Map<String, Shader> shaders = new HashMap<>();
+    private static Map<String, Texture> textures = new HashMap<>();
+    private static Map<String, Spritesheet> spritesheets = new HashMap<>();
 
     public static Shader getShader(String resourceName) {
         File file = new File(resourceName);
-
-        if(shaders.containsKey(file.getAbsolutePath()))
-            return shaders.get(file.getAbsolutePath());
-        else {
+        if (AssetPool.shaders.containsKey(file.getAbsolutePath())) {
+            return AssetPool.shaders.get(file.getAbsolutePath());
+        } else {
             Shader shader = new Shader(resourceName);
             shader.compile();
-            shaders.put(file.getAbsolutePath(), shader);
+            AssetPool.shaders.put(file.getAbsolutePath(), shader);
             return shader;
         }
     }
 
-    public static SpriteSheet getSpriteSheet(String resourceName) {
-        File file = new File(resourceName);
-        assert spriteSheets.containsKey(file.getAbsolutePath()) : "Error: Tried to access sprite sheet '" + resourceName + "', nonexistent in asset pool.";
-
-        return spriteSheets.getOrDefault(file.getAbsolutePath(), null);
-    }
-
     public static Texture getTexture(String resourceName) {
         File file = new File(resourceName);
-
-        if(textures.containsKey(file.getAbsolutePath()))
-            return textures.get(file.getAbsolutePath());
-        else {
+        if (AssetPool.textures.containsKey(file.getAbsolutePath())) {
+            return AssetPool.textures.get(file.getAbsolutePath());
+        } else {
             Texture texture = new Texture();
             texture.init(resourceName);
-            textures.put(file.getAbsolutePath(), texture);
+            AssetPool.textures.put(file.getAbsolutePath(), texture);
             return texture;
         }
     }
 
-    public static void addSpriteSheet(String resourceName, SpriteSheet spriteSheet) {
+    public static void addSpritesheet(String resourceName, Spritesheet spritesheet) {
         File file = new File(resourceName);
-        if(!spriteSheets.containsKey(file.getAbsolutePath()))
-            spriteSheets.put(file.getAbsolutePath(), spriteSheet);
+        if (!AssetPool.spritesheets.containsKey(file.getAbsolutePath())) {
+            AssetPool.spritesheets.put(file.getAbsolutePath(), spritesheet);
+        }
+    }
+
+    public static Spritesheet getSpritesheet(String resourceName) {
+        File file = new File(resourceName);
+        if (!AssetPool.spritesheets.containsKey(file.getAbsolutePath())) {
+            assert false : "Error: Tried to access spritesheet '" + resourceName + "' and it has not been added to asset pool.";
+        }
+        return AssetPool.spritesheets.getOrDefault(file.getAbsolutePath(), null);
     }
 }
