@@ -1,5 +1,6 @@
 package com.example.engine;
 
+import com.example.editor.GameViewWindow;
 import com.example.scenes.Scene;
 import imgui.ImFontAtlas;
 import imgui.ImFontConfig;
@@ -193,6 +194,7 @@ public class ImGuiLayer {
         setupDockspace();
         currentScene.sceneImgui();
         ImGui.showDemoWindow();
+        GameViewWindow.imgui();
         ImGui.end();
         ImGui.render();
 
