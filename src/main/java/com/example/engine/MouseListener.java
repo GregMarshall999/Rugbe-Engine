@@ -106,7 +106,6 @@ public class MouseListener {
     public static float getOrthoX() {
         float currentX = getX() - get().gameViewportPos.x;
         currentX = (currentX / get().gameViewportSize.x) * 2.0f - 1.0f;
-
         Vector4f tmp = new Vector4f(currentX, 0, 0, 1);
 
         Camera camera = Window.getScene().camera();
@@ -121,7 +120,6 @@ public class MouseListener {
     public static float getOrthoY() {
         float currentY = getY() - get().gameViewportPos.y;
         currentY = -((currentY / get().gameViewportSize.y) * 2.0f - 1.0f);
-
         Vector4f tmp = new Vector4f(0, currentY, 0, 1);
 
         Camera camera = Window.getScene().camera();
@@ -134,7 +132,7 @@ public class MouseListener {
     }
 
     public static void setGameViewportPos(Vector2f gameViewportPos) {
-        get().gameViewportPos.get(gameViewportPos);
+        get().gameViewportPos.set(gameViewportPos);
     }
 
     public static void setGameViewportSize(Vector2f gameViewportSize) {

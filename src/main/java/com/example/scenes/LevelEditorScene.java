@@ -9,6 +9,7 @@ import com.example.engine.Camera;
 import com.example.engine.GameObject;
 import com.example.engine.Prefabs;
 import com.example.engine.Transform;
+import com.example.physics2d.rigidbody.Rigidbody2D;
 import com.example.util.AssetPool;
 import imgui.ImGui;
 import imgui.ImVec2;
@@ -16,11 +17,11 @@ import org.joml.Vector2f;
 
 public class LevelEditorScene extends Scene {
 
-    private GameObject obj1;
     private Spritesheet sprites;
-    SpriteRenderer obj1Sprite;
 
     GameObject levelEditorStuff = new GameObject("LevelEditor", new Transform(new Vector2f()), 0);
+    Transform obj1, obj2;
+    Rigidbody2D rb1, rb2;
 
     public LevelEditorScene() {
 
